@@ -33,4 +33,20 @@ cd ${TOPDIR}/rpmbuild/SOURCES/
 wget ${URL}
 
 cd ${TOPDIR}/rpmbuild/
-rpmbuild --define "_topdir ${TOPDIR}/rpmbuild" -ba "SPECS/redis.spec"
+
+if [ -f ${TOPDIR}/gpg-env ]; then
+  echo "Signing RPM ..."
+  source ${TOPDIR}/gpg-env
+
+  if [ "${gpg_bin}" != "" ]; then
+    rpmbuild --define "_topdir ${TOPDIR}/rpmbuild" --define "_signature ${signature}" \
+      --define "_gpg_path ${gpg_path}" --define "_gpg_name ${gpg_name}" \
+      --define "__gpg ${gpg_bin}" --sign -ba "SPECS/redis.spec"
+  else
+    rpmbuild --define "_topdir ${TOPDIR}/rpmbuild" --define "_signature ${signature}" \
+      --define "_gpg_path ${gpg_path}" --define "_gpg_name ${gpg_name}" \
+      --sign -ba "SPECS/redis.spec"
+  fi
+else
+  rpmbuild --define "_topdir ${TOPDIR}/rpmbuild" -ba "SPECS/redis.spec"
+fi

@@ -1,4 +1,5 @@
 rpmbuild/
+gpg-env
 /redis-2.0.3.tar.gz
 /redis-2.0.4.tar.gz
 /redis-2.2.2.tar.gz
